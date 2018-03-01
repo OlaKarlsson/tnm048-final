@@ -12,10 +12,10 @@ height = 300 - margin.top - margin.bottom;
 
 
 // set the ranges
-var xAxisScale = d3.scaleBand()
+var x = d3.scaleBand()
         .rangeRound([0, width])
         .padding(0.1)
-var yAxisScale = d3.scaleLinear()
+var y = d3.scaleLinear()
       .range([height, 0]);
 
      
@@ -54,42 +54,21 @@ var filteredData = newData.filter(function(d){
 console.log(filteredData);
 
 
-// var brush = d3.brushX()
-//     .extent([[0, 0], [width, height2]])
-//     .on("brush", brushed);
-
-var xAxis = d3.axisBottom(xAxisScale);
-var yAxis = d3.axisLeft(yAxisScale);
-
-// Zoom Function
-var zoom = d3.zoom()
-    .on("zoom", zoomFunction);
-
-
-
-
 // append the svg object to the body of the page
 // append a 'group' element to 'svg'
 // moves the 'group' element to the top left margin
 var svg = d3.select(barChartDiv).append("svg")
 .attr("width", width + margin.left + margin.right)
-.attr("height", height + margin.top + margin.bottom);
-// .append("g")
-// .attr("transform", 
-//       "translate(" + margin.left + "," + margin.top + ")");
-
-
-// Inner Drawing Space
-var innerSpace = svg.append("g")
-    .attr("class", "inner_space")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-    .call(zoom);
-
+.attr("height", height + margin.top + margin.bottom)
+.append("g")
+.attr("transform", 
+      "translate(" + margin.left + "," + margin.top + ")");
 
 
 var tooltipDiv = d3.select("body").append("div")
 .attr("class", "bar-tooltip")
 .style("opacity", 0);
+      
 
 // format the data
 // data.forEach(function(d) {
@@ -97,22 +76,22 @@ var tooltipDiv = d3.select("body").append("div")
 // });
 
 // Scale the range of the data in the domains
-xAxisScale.domain(filteredData.map(function (d) { return d.year }));
-yAxisScale.domain([0, 3]);
+x.domain(filteredData.map(function (d) { return d.year }));
+y.domain([0, 3]);
 
 
 
-var bars = innerSpace.selectAll(".bar")
+svg.selectAll(".bar")
 .data(filteredData)
 .enter()
 .append("rect")
     .attr("class", "bar")
     .attr("id", function(d){ return "bar-" + d.year})
     .attr("title", function(d){ return "bar-" + d.year})
-    .attr("x", function(d) { return xAxisScale(d.year); })
-    .attr("y", function(d) { return yAxisScale(d.avgRating); })
-    .attr("width", xAxisScale.bandwidth)
-    .attr("height", function(d) { return height - yAxisScale(d.avgRating); })
+    .attr("x", function(d) { return x(d.year); })
+    .attr("y", function(d) { return y(d.avgRating); })
+    .attr("width", x.bandwidth)
+    .attr("height", function(d) { return height - y(d.avgRating); })
     .on("mouseover", function(d) {
     tooltipDiv.transition()
         .duration(200)
@@ -129,37 +108,16 @@ var bars = innerSpace.selectAll(".bar")
 
 
 // add the x Axis
-var gx = innerSpace.append("g")
+svg.append("g")
   .attr("transform", "translate(0," + height + ")")
-  .call(d3.axisBottom(xAxisScale));
+  .call(d3.axisBottom(x));
 
 // add the y Axis
-var gy = innerSpace.append("g")
-  .call(d3.axisLeft(yAxisScale));
-
+svg.append("g")
+  .call(d3.axisLeft(y));
 
 //Print out to the page where the filtering threshold is
 d3.select("#threshold-label").html(filterTreshold);
-
-
-
-function zoomFunction(){
-    console.log("Zoom");
-    
-    // create new scale ojects based on event
-    var new_xScale = d3.event.transform.rescaleX(xAxisScale)
-    var new_yScale = d3.event.transform.rescaleY(yAxisScale)
-    console.log(d3.event.transform)
-  
-    // update axes
-    gX.call(xAxis.scale(new_xScale));
-    gY.call(yAxis.scale(new_yScale));
-  
-    // update circle
-    bars.attr("transform", d3.event.transform)
-  };
-  
-
 
 
 
