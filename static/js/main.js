@@ -20,7 +20,7 @@ let dummyData = [{
   movie_title: ""
 }];
   pc = new paralellChart();
-  pc.init(dummyData);
+  pc.init(data);
 
   // // format the data to numbers
   // mergedData.forEach(function (d) {

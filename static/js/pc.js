@@ -74,7 +74,7 @@ function paralellChart() {
       .attr("y", -9)
       .text(function (d) { return d.name; });
 
-      
+      this.update(initData);
 
   }
 
@@ -84,23 +84,34 @@ function paralellChart() {
 
     d3.select("#pc_svg").remove();
 
+    
+
     console.log("PC update");
 
-    var filteredData = [];
+    let data=[];
 
-    for (let i = 0; i < rawData.length; i++) {
-      const movie = rawData[i];
-      if (movie.title_year === selected.year) {
-        filteredData.push(movie);
+    if (selected) {
+      d3.select("#year-label").text(selected.year);
+
+      var filteredData = [];
+      for (let i = 0; i < rawData.length; i++) {
+        const movie = rawData[i];
+        if (movie.title_year === selected.year) {
+          filteredData.push(movie);
+        }
       }
+      
+      data = filteredData;
+    }else{
+      data = rawData;
     }
-
+    
 
     dimensions = axesDims(height);
     dimensions.forEach(function (dim) {
       dim.scale.domain(dim.type === "number"
-        ? d3.extent(filteredData, function (d) { return +d[dim.name]; })
-        : filteredData.map(function (d) { return d[dim.name]; }).sort());
+        ? d3.extent(data, function (d) { return +d[dim.name]; })
+        : data.map(function (d) { return d[dim.name]; }).sort());
     });
 
     svg = d3.select(pcChartDiv).append("svg")
@@ -141,14 +152,14 @@ function paralellChart() {
     var background = svg.append("g")
       .attr("class", "background")
       .selectAll("path")
-      .data(filteredData)
+      .data(data)
       .enter().append("path")
       .attr("d", draw);
 
     var foreground = svg.append("g")
       .attr("class", "foreground")
       .selectAll("path")
-      .data(filteredData)
+      .data(data)
       .enter().append("path")
       .attr("d", draw)
       .style("stroke", function (d) {
