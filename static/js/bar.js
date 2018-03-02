@@ -76,7 +76,7 @@ var tooltipDiv = d3.select("body").append("div")
 x.domain(filteredData.map(function (d) { return d.year }));
 y.domain([0, 3]);
 
-
+var selectedBar;
 
 svg.selectAll(".bar")
 .data(filteredData)
@@ -89,6 +89,7 @@ svg.selectAll(".bar")
     .attr("y", function(d) { return y(d.avgRating); })
     .attr("width", x.bandwidth)
     .attr("height", function(d) { return height - y(d.avgRating); })
+    .on("click", mouseClick)
     .on("mouseover", mouseOver)
     .on("mouseout", mouseOut);
     // .on("mouseover", function(d) {
@@ -105,6 +106,19 @@ svg.selectAll(".bar")
     //     .style("opacity", 0);
     // });
 
+    function mouseClick(e) {
+        console.log(e);
+        // tooltipDiv.transition()
+        //     .duration(200)
+        //     .style("opacity", .9);
+        // tooltipDiv.html("Year: " + e.year + "<br/>" + "Avg rating: " + e.avgRating.toFixed(1) + "<br/>" + "Count: " + e.count)
+        //     .style("left", (d3.event.pageX) + "px")
+        //     .style("top", (d3.event.pageY - 28) + "px");
+
+            var myPC = new paralellChart();
+            myPC.update(data, e);
+    }
+
 
     function mouseOver(selected) {
         console.log(selected);
@@ -115,8 +129,8 @@ svg.selectAll(".bar")
             .style("left", (d3.event.pageX) + "px")
             .style("top", (d3.event.pageY - 28) + "px");
 
-            var myPC = new paralellChart();
-            myPC.update(data, selected);
+            // var myPC = new paralellChart();
+            // myPC.update(data, selected);
     }
 
     function mouseOut(d) {
