@@ -1,8 +1,5 @@
-function bar(imdb, bechdel){
+function bar(data){
 
-this.bechdel = bechdel;
-this.imdb = imdb;
-    
 // set the dimensions and margins of the graph
 var barChartDiv = "#bar-chart";
 var parentWidth = $(barChartDiv).parent().width();
@@ -25,19 +22,20 @@ var y = d3.scaleLinear()
 //https://stackoverflow.com/questions/37172184/rename-key-and-values-in-d3-nest
 
 var newData = d3.nest()
-.key(function(d) { return d.year; })
+.key(function(d) { return d.title_year; })
 .rollup(function(values) {
     return {
-        avgRating: d3.mean(values, function(d) {return +d.rating; }),
-        ratingCount: values.length      
+        avgRating: d3.mean(values, function(d) {return +d["bechdel_rating"]; }),
+        ratingCount: values.length
     };
 })
-.entries(bechdel)
+.entries(data)
 .map(function(group){
     return {
         year:group.key,
         avgRating: group.value.avgRating,
         count: group.value.ratingCount
+
     }
 });
 
@@ -63,7 +61,6 @@ var svg = d3.select(barChartDiv).append("svg")
 .append("g")
 .attr("transform", 
       "translate(" + margin.left + "," + margin.top + ")");
-
 
 var tooltipDiv = d3.select("body").append("div")
 .attr("class", "bar-tooltip")
@@ -92,19 +89,50 @@ svg.selectAll(".bar")
     .attr("y", function(d) { return y(d.avgRating); })
     .attr("width", x.bandwidth)
     .attr("height", function(d) { return height - y(d.avgRating); })
-    .on("mouseover", function(d) {
-    tooltipDiv.transition()
-        .duration(200)
-        .style("opacity", .9);
-    tooltipDiv.html("Year: " + d.year + "<br/>" + "Avg rating: " +d.avgRating.toFixed(1)+ "<br/>" + "Count: " +d.count)
-        .style("left", (d3.event.pageX) + "px")
-        .style("top", (d3.event.pageY - 28) + "px");
-    })
-    .on("mouseout", function(d) {
-    tooltipDiv.transition()
+    .on("mouseover", mouseOver)
+    .on("mouseout", mouseOut);
+    // .on("mouseover", function(d) {
+    // tooltipDiv.transition()
+    //     .duration(200)
+    //     .style("opacity", .9);
+    // tooltipDiv.html("Year: " + d.year + "<br/>" + "Avg rating: " +d.avgRating.toFixed(1)+ "<br/>" + "Count: " +d.count)
+    //     .style("left", (d3.event.pageX) + "px")
+    //     .style("top", (d3.event.pageY - 28) + "px");
+    // })
+    // .on("mouseout", function(d) {
+    // tooltipDiv.transition()
+    //     .duration(500)
+    //     .style("opacity", 0);
+    // });
+
+
+    function mouseOver(selected) {
+        console.log(selected);
+        tooltipDiv.transition()
+            .duration(200)
+            .style("opacity", .9);
+        tooltipDiv.html("Year: " + selected.year + "<br/>" + "Avg rating: " + selected.avgRating.toFixed(1) + "<br/>" + "Count: " + selected.count)
+            .style("left", (d3.event.pageX) + "px")
+            .style("top", (d3.event.pageY - 28) + "px");
+
+            var myPC = new paralellChart();
+            myPC.update(data, selected);
+    }
+
+    function mouseOut(d) {
+        tooltipDiv.transition()
         .duration(500)
         .style("opacity", 0);
-    });
+    }
+
+
+// brush = d3.brush()
+// .on("brush", brushing);
+
+// svg.append("g")
+//     .attr("class", ".brush")
+//     .call(brush);
+
 
 
 // add the x Axis
@@ -119,6 +147,16 @@ svg.append("g")
 //Print out to the page where the filtering threshold is
 d3.select("#threshold-label").html(filterTreshold);
 
+
+function brushing() {
+
+    // .attr("class", "brushed");
+    // var d_brushed =  d3.selectAll(".brushed").data();
+    var brush_coords = d3.brushSelection(this);
+    console.log(brush_coords);
+    
+
+}
 
 
 }
