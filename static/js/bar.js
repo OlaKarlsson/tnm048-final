@@ -108,6 +108,11 @@ svg.selectAll(".bar")
 
     function mouseClick(e) {
         console.log(e);
+
+        if (document.getElementsByClassName('selected').length > 0) {
+            document.getElementsByClassName('selected').item(0).classList.remove("selected");
+           }
+
         console.log(d3.event.srcElement);
         d3.select(d3.event.srcElement)
         .attr("class", "bar selected");
@@ -140,12 +145,7 @@ svg.selectAll(".bar")
     function mouseOut(d) {
         tooltipDiv.transition()
         .duration(500)
-        .style("opacity", 0);
-
-       if (document.getElementsByClassName('selected').length > 0) {
-        document.getElementsByClassName('selected').item(0).classList.remove("selected");
-       }
-        
+        .style("opacity", 0);        
     }
 
 

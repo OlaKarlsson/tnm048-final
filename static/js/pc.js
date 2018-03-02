@@ -335,22 +335,17 @@ function paralellChart() {
         type: "string"
       },
       {
+        name: "movie_facebook_likes",
+        scale: d3.scaleLinear().range([height, 0]),
+        type: "number"
+      },
+      {
+        name: "director_facebook_likes",
+        scale: d3.scaleLinear().range([height, 0]),
+        type: "number"
+      },
+      {
         name: "num_voted_users",
-        scale: d3.scaleLinear().range([0, height]),
-        type: "number"
-      },
-      {
-        name: "num_user_for_reviews",
-        scale: d3.scaleLinear().range([height, 0]),
-        type: "number"
-      },
-      {
-        name: "num_critic_for_reviews",
-        scale: d3.scaleLinear().range([height, 0]),
-        type: "number"
-      },
-      {
-        name: "budget",
         scale: d3.scaleLinear().range([height, 0]),
         type: "number"
       },

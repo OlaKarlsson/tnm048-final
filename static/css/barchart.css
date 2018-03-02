@@ -6,6 +6,10 @@
     fill: brown;
   }
 
+  .selected{
+    fill: brown;
+  }
+
 .brush-bar-chart .x.axis path {
     display: none;
   }
