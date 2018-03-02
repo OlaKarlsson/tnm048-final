@@ -173,10 +173,10 @@ function paralellChart() {
 
 
 
-  // //Tooltip
-  // var tooltip = d3.select(pcChartDiv).append("div")
-  //      .attr("class", "tooltip")
-  //      .style("opacity", 0);
+  //Tooltip
+  var tooltip = d3.select(pcChartDiv).append("div")
+       .attr("class", "tooltip")
+       .style("opacity", 0);
 
 
 
