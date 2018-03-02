@@ -108,6 +108,10 @@ svg.selectAll(".bar")
 
     function mouseClick(e) {
         console.log(e);
+        console.log(d3.event.srcElement);
+        d3.select(d3.event.srcElement)
+        .attr("class", "bar selected");
+        
         // tooltipDiv.transition()
         //     .duration(200)
         //     .style("opacity", .9);
@@ -125,10 +129,10 @@ svg.selectAll(".bar")
         tooltipDiv.transition()
             .duration(200)
             .style("opacity", .9);
-        tooltipDiv.html("Year: " + selected.year + "<br/>" + "Avg rating: " + selected.avgRating.toFixed(1) + "<br/>" + "Count: " + selected.count)
+        tooltipDiv.html("Year: " + selected.year+ "<br/>" + "Movie count: " + selected.count + "<br/>" + "Avg rating: " + selected.avgRating.toFixed(1))
             .style("left", (d3.event.pageX) + "px")
             .style("top", (d3.event.pageY - 28) + "px");
-
+            
             // var myPC = new paralellChart();
             // myPC.update(data, selected);
     }
@@ -137,6 +141,11 @@ svg.selectAll(".bar")
         tooltipDiv.transition()
         .duration(500)
         .style("opacity", 0);
+
+       if (document.getElementsByClassName('selected').length > 0) {
+        document.getElementsByClassName('selected').item(0).classList.remove("selected");
+       }
+        
     }
 
 
