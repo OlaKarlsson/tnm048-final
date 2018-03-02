@@ -16,11 +16,10 @@ brushBar;
 function draw(error, data) {
   if (error) throw error;
   bar = new bar(data);
-let dummyData = [{
-  movie_title: ""
-}];
+
   pc = new paralellChart();
   pc.init(data);
+  
 
   // // format the data to numbers
   // mergedData.forEach(function (d) {
